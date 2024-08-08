@@ -26,6 +26,6 @@ class AuthController extends Controller
         ], true)){
             return redirect()->back()->with('error', 'Please enter your valid username & password');
         }
-        return redirect()->back()->with('success', 'Login success!');
+        return redirect()->route('dashboard')->with('success', 'Login success!');
     }
 }
