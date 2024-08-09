@@ -1,4 +1,4 @@
-# Website Lead Collection Project
+# Website Lead Collection Portal
 
 
 # Stacks
@@ -19,3 +19,8 @@
 - Middleware
 - Setup Database
 - Create User Form
+
+## Day 3
+- Some minor changes & fix
+- Create users list
+- Add User Update Form
