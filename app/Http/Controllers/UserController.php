@@ -21,6 +21,9 @@ class UserController extends Controller
 
     public function update(User $user)
     {
+        if(!$user){
+            return response('', 404);
+        }
         return view('users.form', ['user' => $user]);
     }
 
@@ -56,6 +59,9 @@ class UserController extends Controller
 
     public function do_update(Request $request, User $user)
     {
+        if(!$user){
+            return response('', 404);
+        }
         $request->validate([
             'name' => 'required|min:3|max:160',
             'username' => 'required|min:4|max:25|unique:users,username,' . $user->id . ',id',
@@ -79,6 +85,8 @@ class UserController extends Controller
         }        
         if ($request->login_block) {
             $user->status = 0;
+        }else{
+            $user->status = 1;
         }
         if ($request->is_super) {
             $user->is_super = 1;
@@ -89,5 +97,17 @@ class UserController extends Controller
         }
         return redirect()->back()->with('success', 'User updated successfully!');
 
+    }
+
+
+    public function do_delete(User $user){
+        if(!$user){
+            return response('', 404);
+        }
+        $result = $user->delete();
+        if(!$result){
+            return redirect()->back()->with('error', 'Unable to delete the user!');
+        }
+        return redirect()->back()->with('success', 'User deleted successfully!');
     }
 }

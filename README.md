@@ -24,3 +24,9 @@
 - Some minor changes & fix
 - Create users list
 - Add User Update Form
+
+## Day 4
+- Delete user
+- Set super admin middleware
+- User account update
+- Create forms data structure (models & migrations)
