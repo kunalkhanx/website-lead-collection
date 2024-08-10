@@ -1,5 +1,5 @@
 # Website Lead Collection Portal
-
+A protal to collect and manages leads and form data from websites.
 
 # Stacks
 - Laravel 11
@@ -30,3 +30,7 @@
 - Set super admin middleware
 - User account update
 - Create forms data structure (models & migrations)
+
+## Day 5
+- Change session time
+- Add form creation

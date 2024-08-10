@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id'); // Owner
             $table->string('name');
             $table->string('description')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->json('meta')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

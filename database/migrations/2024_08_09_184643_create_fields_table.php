@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('label');
             $table->string('placeholder')->nullable();
             $table->text('validation_rule');
+            $table->tinyInteger('status')->default(1);
+            $table->json('meta')->nullable();
             $table->timestamps();
         });
     }
