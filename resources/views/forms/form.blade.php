@@ -31,8 +31,13 @@
                 @enderror
             </div>
             <div class="flex items-start mb-5">
+                @php
+                    if($form->status === NULL){
+                        $form->status = 1;
+                    }
+                @endphp
                 <div class="flex items-center h-5">
-                    <input id="disabled" name="disabled" type="checkbox" value="1" {{old('disabled', ($form->status == 0 ? '1' : null)) ? 'checked' : ''}}
+                    <input id="disabled" name="disabled" type="checkbox" value="1" {{old('disabled', ($form->status < 1)) ? 'checked' : ''}}
                         class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
                 </div>
                 <label for="disabled" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Disabled</label>

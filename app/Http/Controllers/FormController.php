@@ -11,7 +11,7 @@ class FormController extends Controller
 {
 
     public function index(){
-        $forms = Form::where('status', '>=', 0)->latest()->paginate(10);
+        $forms = Form::where('status', '>=', 0)->with('user')->latest()->paginate(10);
         return view('forms.index', ['forms' => $forms]);
     }
     public function create(){
@@ -38,7 +38,7 @@ class FormController extends Controller
         if(!$result){
             return redirect()->back()->withInput()->with('error', 'Unable to create the form!');
         }
-        return redirect()->back()->with('success', 'Form created successfully!');
+        return redirect()->route('forms.update', ['form' => $form->id])->with('success', 'Form created successfully!');
     }
 
     public function do_update(Request $request, Form $form){

@@ -34,3 +34,9 @@ A protal to collect and manages leads and form data from websites.
 ## Day 5
 - Change session time
 - Add form creation
+
+## Day 6
+- List form owners
+- Add field form
+- Add field list
+- Add field delete

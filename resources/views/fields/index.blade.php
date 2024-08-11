@@ -4,11 +4,11 @@
     <div class="container mx-auto max-w-screen-xl p-4">
 
         <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-3xl">Forms</h2>
+            <h2 class="text-3xl">Fields</h2>
 
-            <a href="{{ route('forms.create') }}"
+            <a href="{{ route('fields.create') }}"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create
-                Form</a>
+                Field</a>
         </div>
 
 
@@ -24,13 +24,13 @@
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Description
+                            Label
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Owner
+                            Placeholder
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Fields
+                            Validation Rules
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Action
@@ -38,31 +38,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($forms as $form)
+                    @foreach ($fields as $field)
                         <tr
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $form->id }}
+                                {{ $field->id }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $form->name }}
+                                {{ $field->name }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $form->description }}
+                                {{ $field->label }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $form->user->name }}
+                                {{ $field->placeholder }}
                             </td>
                             <td class="px-6 py-4">
-                                0
+                               {{$field->validation_rules}}
                             </td>                           
                             <td class="px-6 py-4 flex items-center gap-3">
-                                <a href="{{route('forms.update', ['form' => $form->id])}}"
+                                <a href="{{route('fields.update', ['field' => $field->id])}}"
                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                 {{-- <a href="#"
                                     class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a> --}}
-                                <form action="{{route('forms.do_delete', ['form' => $form->id])}}" method="POST" class="confirm" data-prompt="Are you sure to delete the form?">
+                                <form action="{{route('fields.do_delete', ['field' => $field->id])}}" method="POST" class="confirm" data-prompt="Are you sure to delete the field?">
                                     @csrf
                                     <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                                 </form>
@@ -78,16 +78,16 @@
         <nav aria-label="Page navigation example">
             <ul class="inline-flex -space-x-px text-sm">
               <li>
-                <a href="{{$forms->previousPageUrl()}}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                <a href="{{$fields->previousPageUrl()}}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
               </li>
-              @for($i = 1; $i <= $forms->lastPage(); $i++)
+              @for($i = 1; $i <= $fields->lastPage(); $i++)
               <li>
-                <a href="{{$forms->url($i)}}" class="{{$i == $forms->currentPage() ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}}">{{$i}}</a>
+                <a href="{{$fields->url($i)}}" class="{{$i == $fields->currentPage() ? 'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white' : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'}}">{{$i}}</a>
               </li>
               @endfor
               
               <li>
-                <a href="{{$forms->nextPageUrl()}}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                <a href="{{$fields->nextPageUrl()}}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
               </li>
             </ul>
           </nav>

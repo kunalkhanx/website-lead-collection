@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('fields', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('label');
             $table->string('placeholder')->nullable();
-            $table->text('validation_rule');
+            $table->text('validation_rules');
             $table->tinyInteger('status')->default(1);
             $table->json('meta')->nullable();
             $table->timestamps();
