@@ -23,7 +23,7 @@ class FieldController extends Controller
 
     public function do_create(Request $request){
         $request->validate([
-            'name' => 'required|min:3|max:25|unique:fields,validation_rules',
+            'name' => 'required|min:3|max:25|unique:fields,name',
             'label' => 'nullable|max:50',
             'placeholder' => 'nullable|max:100',
             'validation_rules' => 'required|max:500'
@@ -46,7 +46,7 @@ class FieldController extends Controller
             return response('', 404);
         }
         $request->validate([
-            'name' => 'required|min:3|max:25|unique:fields,validation_rules,' . $field->id . ',id',
+            'name' => 'required|min:3|max:25|unique:fields,name,' . $field->id . ',id',
             'label' => 'nullable|max:50',
             'placeholder' => 'nullable|max:100',
             'validation_rules' => 'required|max:500'

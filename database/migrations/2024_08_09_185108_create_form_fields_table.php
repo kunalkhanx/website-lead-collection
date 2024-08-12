@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('form_id');
             $table->unsignedBigInteger('field_id');
 
+            
+
             $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
         });

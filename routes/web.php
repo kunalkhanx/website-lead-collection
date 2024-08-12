@@ -17,6 +17,9 @@ Route::middleware('admin')->group(function(){
         Route::get('/{form}', [\App\Http\Controllers\FormController::class, 'update'])->name('forms.update');
         Route::patch('/{form}', [\App\Http\Controllers\FormController::class, 'do_update'])->name('forms.do_update');
         Route::post('/delete/{form}', [\App\Http\Controllers\FormController::class, 'do_delete'])->name('forms.do_delete');
+
+        Route::post('/fields/{form}', [App\Http\Controllers\FormController::class, 'do_add_field'])->name('forms.do_add_field');
+        Route::post('/fields/{form}/{field}', [App\Http\Controllers\FormController::class, 'do_remove_field'])->name('forms.do_remove_field');
     });
 
     Route::prefix('/fields')->group(function(){

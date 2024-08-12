@@ -40,3 +40,6 @@ A protal to collect and manages leads and form data from websites.
 - Add field form
 - Add field list
 - Add field delete
+
+## Day 7
+- Add fields to form
