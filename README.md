@@ -43,3 +43,7 @@ A protal to collect and manages leads and form data from websites.
 
 ## Day 7
 - Add fields to form
+
+## Day 8
+- Show field count on forms table
+- Dynamic add data form

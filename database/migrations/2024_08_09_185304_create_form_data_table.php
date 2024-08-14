@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('form_data', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('form_id');
-            $table->unsignedBigInteger('field_id');
-            $table->text('data')->nullable();
+            $table->json('data')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->json('meta')->nullable();
             $table->timestamps();
 
             $table->foreign('form_id')->references('id')->on('forms')->onDelete('cascade');
-            $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
         });
     }
 

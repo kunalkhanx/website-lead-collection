@@ -13,7 +13,7 @@ class FormController extends Controller
 {
 
     public function index(){
-        $forms = Form::where('status', '>=', 0)->with('user')->latest()->paginate(10);
+        $forms = Form::where('status', '>=', 0)->with('user')->with('fields')->latest()->paginate(10);
         return view('forms.index', ['forms' => $forms]);
     }
     public function create(){
@@ -25,6 +25,18 @@ class FormController extends Controller
         }
         $fields = $form->fields()->get();
         return view('forms.form', ['form' => $form, 'fields' => $fields]);
+    }
+    public function form_data($id){
+        $form = Form::where('id', $id)->with('user')->with('fields')->first();
+        if(!$form){
+            return response('', 404);
+        }
+        $formData = $form->data()->paginate(10);
+        return view('forms.data.index', ['form' => $form, 'formData' => $formData]);
+    }
+    public function create_data($id){
+        $form = Form::where('id', $id)->with('fields')->first();
+        return view('forms.data.form', ['form' => $form]);
     }
 
     public function do_create(Request $request){

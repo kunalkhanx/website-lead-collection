@@ -13,7 +13,12 @@ Route::middleware('admin')->group(function(){
     Route::prefix('/forms')->group(function(){
         Route::get('/', [\App\Http\Controllers\FormController::class, 'index'])->name('forms');
         Route::get('/create', [\App\Http\Controllers\FormController::class, 'create'])->name('forms.create');
+
         Route::post('/create', [\App\Http\Controllers\FormController::class, 'do_create'])->name('forms.do_create');
+
+        Route::get('/data/{id}', [\App\Http\Controllers\FormController::class, 'form_data'])->name('forms.form_data');
+        Route::get('/data/create/{id}', [\App\Http\Controllers\FormController::class, 'create_data'])->name('forms.create_data');
+
         Route::get('/{form}', [\App\Http\Controllers\FormController::class, 'update'])->name('forms.update');
         Route::patch('/{form}', [\App\Http\Controllers\FormController::class, 'do_update'])->name('forms.do_update');
         Route::post('/delete/{form}', [\App\Http\Controllers\FormController::class, 'do_delete'])->name('forms.do_delete');
