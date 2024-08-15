@@ -17,7 +17,7 @@ class Form extends Model
     }
 
     public function fields():BelongsToMany{
-        return $this->belongsToMany(Field::class, FormField::class)->withPivot(['is_unique', 'is_required']);;
+        return $this->belongsToMany(Field::class, FormField::class)->withPivot(['is_unique', 'is_required', 'display']);;
     }
 
     public function data():HasMany{

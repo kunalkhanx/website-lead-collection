@@ -11,6 +11,6 @@ class Field extends Model
     use HasFactory;
 
     public function forms():BelongsToMany{
-        return $this->belongsToMany(Form::class, FormField::class)->withPivot(['is_unique', 'is_required']);
+        return $this->belongsToMany(Form::class, FormField::class)->withPivot(['is_unique', 'is_required', 'display']);
     }
 }

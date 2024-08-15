@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Field;
 use App\Models\Form;
+use App\Models\FormData;
 use App\Models\FormField;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -99,8 +100,9 @@ class FormController extends Controller
         }
         $request->validate([
             'field_name' => 'required|min:3|max:25',
-            'required' => 'nullable|numeric',
-            'unique' => 'nullable|numeric'
+            'required' => 'nullable|boolean',
+            'unique' => 'nullable|boolean',
+            'display' => 'nullable|boolean'
         ]);
 
         $field = Field::where('name', $request->field_name)->where('status', '>', 0)->first();
@@ -112,7 +114,8 @@ class FormController extends Controller
         $form->fields()->attach(['field_id' => $field->id],
         [
             'is_required' => $request->required ? true : false,
-            'is_unique' => $request->unique ? true : false
+            'is_unique' => $request->unique ? true : false,
+            'display' => $request->display ? true : false
         ]);
         return redirect()->back()->with('success', 'Filed added to the form successfully.');
     }
@@ -126,5 +129,30 @@ class FormController extends Controller
             return redirect()->back()->with('error', 'Unable to remove the field!');
         }
         return redirect()->back()->with('success', 'Field removed successfully!');
+    }
+
+    public function do_create_data(Request $request, Form $form){
+        if(!$form){
+            return response('', 404);
+        }
+        $fields = $form->fields()->get();
+        $validation_rules = [];
+        $data = [];
+        foreach($fields as $field){
+            $validation_rules[$field->name] = ($field->pivot->is_required ? 'required|' : '') . $field->validation_rules;
+            //TODO::Check if the field is unique
+
+            $data[$field->name] = $request->get($field->name);
+        }
+        $request->validate($validation_rules);
+
+        $formData = new FormData;
+        $formData->form_id = $form->id;
+        $formData->data = json_encode($data);
+        $result = $formData->save();
+        if(!$result){
+            return redirect()->back()->with('error', 'Unable to add data!');
+        }
+        return redirect()->back()->with('success', 'Data added successfully!');
     }
 }

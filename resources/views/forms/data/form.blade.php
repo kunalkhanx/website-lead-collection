@@ -51,7 +51,8 @@
                 }
             @endphp
 
-            <form action="" class="flex flex-col gap-4">
+            <form action="{{route('forms.do_create_data', ['form' => $form->id])}}" class="flex flex-col gap-4" method="POST">
+                @csrf
                 @foreach ($form->fields as $field)
                     @php $inputType = getInputType($field->validation_rules); @endphp
                     
@@ -59,27 +60,36 @@
                         <div class="form-control">
                             <label for="{{ $field->name }}">{{ $field->label }}</label>
                             <textarea id="{{ $field->name }}" placeholder="{{ $field->placeholder }}" rows="3" name="{{ $field->name }}">{{ old($field->name) }}</textarea>
+                            @error($field->name)
+                                <p class="err">{{ $message }}</p>
+                            @enderror
                         </div>
                     @elseif($inputType[0] == 'checkbox')
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
-                                <input id="{{ $field->name }}" type="checkbox"
-                                    value="{{ old($field->name) ? 'checked' : '' }}"
+                                <input id="{{ $field->name }}" type="checkbox" value="1"
+                                    {{ old($field->name) ? 'checked' : '' }} name="{{ $field->name }}"
                                     class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                                    required />
+                                     />
                             </div>
                             <label for="{{ $field->name }}"
                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $field->label }}</label>
                         </div>
+                        @error($field->name)
+                                <p class="err">{{ $message }}</p>
+                        @enderror
                     @elseif($inputType[0] == 'array')
                         <div class="form-control">
                             <label for="{{ $field->name }}">{{ $field->label }}</label>
                             <select name="{{ $field->name }}" id="{{ $field->name }}">
                                 <option value="">{{ $field->placeholder }}</option>
                                 @foreach ($inputType[1] as $item)
-                                    <option value="{{ $item }}">{{ ucfirst(strtolower($item)) }}</option>
+                                    <option {{old($field->name) === $item ? 'selected' : ''}} value="{{ $item }}">{{ ucfirst(strtolower($item)) }}</option>
                                 @endforeach
                             </select>
+                            @error($field->name)
+                                <p class="err">{{ $message }}</p>
+                            @enderror
                         </div>
                     @else
                         <div class="form-control">

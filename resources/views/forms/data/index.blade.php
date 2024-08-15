@@ -20,13 +20,28 @@
                             #ID
                         </th>
                         @foreach ($form->fields as $field)
+                        @if($field->pivot->display)
                         <th scope="col" class="px-6 py-3">
                             {{$field->label}}
                         </th>
+                        @endif
                         @endforeach
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        function printData($dataToPrint, $validation_rules){
+                            $rules = explode('|', $validation_rules);
+                            if(in_array('boolean', $rules)){
+                                // var_dump($dataToPrint);
+                                return $dataToPrint == 1 ? 'Yes' : 'No';
+                            }
+                            return $dataToPrint;
+                        }
+                    @endphp
                     @foreach ($formData as $row)
                         @php
                             $data = json_decode($row->data, true);
@@ -38,9 +53,11 @@
                                 {{ $row->id }}
                             </th>
                             @foreach ($form->fields as $field)
+                            @if($field->pivot->display)
                             <td class="px-6 py-4">
-                                {{ isset($data[$field->name]) ? $data[$field->name] : '' }}
+                                {{ printData(!isset($data[$field->name]) ? null : $data[$field->name], $field->validation_rules) }}
                             </td>
+                            @endif
                             @endforeach                
                             <td class="px-6 py-4 flex items-center gap-3">
                                 <a href="" class="font-medium text-green-600 dark:text-green-500 hover:underline">

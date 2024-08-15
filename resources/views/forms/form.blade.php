@@ -58,34 +58,40 @@
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-4 py-3">
+                            <th scope="col" class="px-3 py-3">
                                 Field
                             </th>
-                            <th scope="col" class="px-4 py-3">
+                            <th scope="col" class="px-3 py-3">
                                 Required
                             </th>
-                            <th scope="col" class="px-4 py-3">
+                            <th scope="col" class="px-3 py-3">
                                 Unique
                             </th>
-                            <th scope="col" class="px-4 py-3">
+                            <th scope="col" class="px-3 py-3">
+                                Display
+                            </th>
+                            <th scope="col" class="px-3 py-3">
                                 Delete
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="text-xs">
                         @foreach ($fields as $field)
                             <tr
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <td class="px-4 py-4">
+                                <td class="px-3 py-4">
                                     {{ $field->name }}
                                 </td>
-                                <td class="px-4 py-4">
+                                <td class="px-3 py-4">
                                     {{ $field->pivot->is_required ? 'Yes' : 'No' }}
                                 </td>
-                                <td class="px-4 py-4">
+                                <td class="px-3 py-4">
                                     {{ $field->pivot->is_unique ? 'Yes' : 'No' }}
-                                </td>                        
-                                <td class="px-4 py-4 flex items-center gap-3">
+                                </td>
+                                <td class="px-3 py-4">
+                                    {{ $field->pivot->display ? 'Yes' : 'No' }}
+                                </td>                      
+                                <td class="px-3 py-4 flex items-center gap-3">
                                     <form action="{{route('forms.do_remove_field', ['form' => $form->id, 'field' => $field->id])}}" method="POST" class="confirm" data-prompt="Are you sure to remove the field?">
                                         @csrf
                                         <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
@@ -125,6 +131,16 @@
                     </div>
                     <label for="unique" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Unique</label>
                     @error('unique')
+                        <p class="err">{{$message}}</p>
+                    @enderror
+                  </div>
+
+                  <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                      <input id="display" name="display" type="checkbox" value="1" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" checked />
+                    </div>
+                    <label for="display" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Display on table</label>
+                    @error('display')
                         <p class="err">{{$message}}</p>
                     @enderror
                   </div>
