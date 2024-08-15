@@ -18,7 +18,11 @@ Route::middleware('admin')->group(function(){
 
         Route::get('/data/{id}', [\App\Http\Controllers\FormController::class, 'form_data'])->name('forms.form_data');
         Route::get('/data/create/{id}', [\App\Http\Controllers\FormController::class, 'create_data'])->name('forms.create_data');
+        Route::get('/data/update/{id}/{formData}', [\App\Http\Controllers\FormController::class, 'update_data'])->name('forms.update_data');
+        Route::get('/data/{id}/{formData}', [\App\Http\Controllers\FormController::class, 'show_data'])->name('forms.show_data');
         Route::post('/data/create/{form}', [\App\Http\Controllers\FormController::class, 'do_create_data'])->name('forms.do_create_data');
+        Route::patch('/data/create/{formData}', [\App\Http\Controllers\FormController::class, 'do_update_data'])->name('forms.do_update_data');
+        Route::post('/data/delete/{formData}', [\App\Http\Controllers\FormController::class, 'do_delete_data'])->name('forms.do_delete_data');
 
         Route::get('/{form}', [\App\Http\Controllers\FormController::class, 'update'])->name('forms.update');
         Route::patch('/{form}', [\App\Http\Controllers\FormController::class, 'do_update'])->name('forms.do_update');

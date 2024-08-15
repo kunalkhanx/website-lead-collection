@@ -27,6 +27,9 @@
                         @endif
                         @endforeach
                         <th scope="col" class="px-6 py-3">
+                            Created At
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Action
                         </th>
                     </tr>
@@ -58,14 +61,17 @@
                                 {{ printData(!isset($data[$field->name]) ? null : $data[$field->name], $field->validation_rules) }}
                             </td>
                             @endif
-                            @endforeach                
+                            @endforeach
+                            <td class="px-6 py-4">
+                                {{ $row->created_at }}
+                            </td>             
                             <td class="px-6 py-4 flex items-center gap-3">
-                                <a href="" class="font-medium text-green-600 dark:text-green-500 hover:underline">
+                                <a href="{{route('forms.show_data', ['id' => $form->id, 'formData' => $row->id])}}" class="font-medium text-green-600 dark:text-green-500 hover:underline">
                                     View
                                 </a>
-                                <a href=""
+                                <a href="{{route('forms.update_data', ['id' => $form->id, 'formData' => $row->id])}}"
                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                <form action="" method="POST" class="confirm" data-prompt="Are you sure to delete the form?">
+                                <form action="{{route('forms.do_delete_data', ['formData' => $row->id])}}" method="POST" class="confirm" data-prompt="Are you sure to delete the entry?">
                                     @csrf
                                     <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</button>
                                 </form>

@@ -37,7 +37,21 @@ class FormController extends Controller
     }
     public function create_data($id){
         $form = Form::where('id', $id)->with('fields')->first();
-        return view('forms.data.form', ['form' => $form]);
+        return view('forms.data.form', ['form' => $form, 'formData' => new FormData]);
+    }
+    public function update_data($id, FormData $formData){
+        $form = Form::where('id', $id)->with('fields')->first();
+        if(!$formData || !$form){
+            return response('', 404);
+        }        
+        return view('forms.data.form', ['form' => $form, 'formData' => $formData]);
+    }
+    public function show_data($id, FormData $formData){
+        $form = Form::where('id', $id)->with('fields')->first();
+        if(!$formData || !$form){
+            return response('', 404);
+        }        
+        return view('forms.data.show', ['form' => $form, 'formData' => $formData]);
     }
 
     public function do_create(Request $request){
@@ -140,8 +154,12 @@ class FormController extends Controller
         $data = [];
         foreach($fields as $field){
             $validation_rules[$field->name] = ($field->pivot->is_required ? 'required|' : '') . $field->validation_rules;
-            //TODO::Check if the field is unique
-
+            if($field->pivot->is_unique && $request->{$field->name}){
+                $uniqueResult = FormData::where('form_id', $form->id)->where('data', 'LIKE', '%"email": "'. $request->{$field->name} .'"%')->first();
+                if($uniqueResult){
+                    return redirect()->back()->withInput()->withErrors([$field->name => $field->label . ' is already exists.']);
+                }
+            }
             $data[$field->name] = $request->get($field->name);
         }
         $request->validate($validation_rules);
@@ -154,5 +172,48 @@ class FormController extends Controller
             return redirect()->back()->with('error', 'Unable to add data!');
         }
         return redirect()->back()->with('success', 'Data added successfully!');
+    }
+
+    public function do_update_data(Request $request, FormData $formData){
+        if(!$formData){
+            return response('', 404);
+        }
+        $form = $formData->form()->first();
+        if(!$form){
+            return response('', 404);
+        }
+        $fields = $form->fields()->get();
+        $validation_rules = [];
+        $data = [];
+        foreach($fields as $field){
+            $validation_rules[$field->name] = ($field->pivot->is_required ? 'required|' : '') . $field->validation_rules;
+            if($field->pivot->is_unique && $request->{$field->name}){
+                $uniqueResult = FormData::where('form_id', $form->id)->where('data', 'LIKE', '%"email": "'. $request->{$field->name} .'"%')->where('id', '!=', $formData->id)->first();
+                if($uniqueResult){
+                    return redirect()->back()->withInput()->withErrors([$field->name => $field->label . ' is already exists.']);
+                }
+            }
+
+            $data[$field->name] = $request->get($field->name);
+        }
+        $request->validate($validation_rules);
+
+        $formData->data = json_encode($data);
+        $result = $formData->save();
+        if(!$result){
+            return redirect()->back()->with('error', 'Unable to updated data!');
+        }
+        return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+    public function do_delete_data(FormData $formData){
+        if(!$formData){
+            return response('', 404);
+        }
+        $result = $formData->delete();
+        if(!$result){
+            return redirect()->back()->with('error', 'Unable to delete data!');
+        }
+        return redirect()->back()->with('success', 'Data deleted successfully!');
     }
 }

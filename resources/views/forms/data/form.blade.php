@@ -13,7 +13,7 @@
                     </svg>
                 </a>
                 <div>
-                    <h2 class="text-3xl">Add form data</h2>
+                    <h2 class="text-3xl">{{$formData->id ? 'Update' : 'Add'}} form data</h2>
                     <p>{{ $form->name }}</p>
                 </div>
             </div>
@@ -49,17 +49,19 @@
 
                     return ['text'];
                 }
+                $fData = json_decode($formData->data, true);
             @endphp
 
-            <form action="{{route('forms.do_create_data', ['form' => $form->id])}}" class="flex flex-col gap-4" method="POST">
+            <form action="{{$formData->id ? route('forms.do_update_data', ['formData' => $formData->id]) : route('forms.do_create_data', ['form' => $form->id])}}" class="flex flex-col gap-4" method="POST">
                 @csrf
+                @if($formData->id) @method('PATCH') @endif
                 @foreach ($form->fields as $field)
                     @php $inputType = getInputType($field->validation_rules); @endphp
                     
                     @if ($inputType[0] == 'textarea')
                         <div class="form-control">
                             <label for="{{ $field->name }}">{{ $field->label }}</label>
-                            <textarea id="{{ $field->name }}" placeholder="{{ $field->placeholder }}" rows="3" name="{{ $field->name }}">{{ old($field->name) }}</textarea>
+                            <textarea id="{{ $field->name }}" placeholder="{{ $field->placeholder }}" rows="3" name="{{ $field->name }}">{{ old($field->name, !isset($fData[$field->name]) ? null : $fData[$field->name]) }}</textarea>
                             @error($field->name)
                                 <p class="err">{{ $message }}</p>
                             @enderror
@@ -68,7 +70,7 @@
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
                                 <input id="{{ $field->name }}" type="checkbox" value="1"
-                                    {{ old($field->name) ? 'checked' : '' }} name="{{ $field->name }}"
+                                    {{ old($field->name, !isset($fData[$field->name]) ? null : $fData[$field->name]) ? 'checked' : '' }} name="{{ $field->name }}"
                                     class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
                                      />
                             </div>
@@ -84,7 +86,7 @@
                             <select name="{{ $field->name }}" id="{{ $field->name }}">
                                 <option value="">{{ $field->placeholder }}</option>
                                 @foreach ($inputType[1] as $item)
-                                    <option {{old($field->name) === $item ? 'selected' : ''}} value="{{ $item }}">{{ ucfirst(strtolower($item)) }}</option>
+                                    <option {{old($field->name, !isset($fData[$field->name]) ? null : $fData[$field->name]) === $item ? 'selected' : ''}} value="{{ $item }}">{{ ucfirst(strtolower($item)) }}</option>
                                 @endforeach
                             </select>
                             @error($field->name)
@@ -94,7 +96,7 @@
                     @else
                         <div class="form-control">
                             <label for="{{ $field->name }}">{{ $field->label }}</label>
-                            <input type="{{ $inputType[0] }}" name="{{ $field->name }}" value="{{ old($field->name) }}"
+                            <input type="{{ $inputType[0] }}" name="{{ $field->name }}" value="{{ old($field->name, !isset($fData[$field->name]) ? null : $fData[$field->name]) }}"
                                 id="{{ $field->name }}" placeholder="{{ $field->placeholder }}">
                             @error($field->name)
                                 <p class="err">{{ $message }}</p>

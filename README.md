@@ -51,3 +51,8 @@ A protal to collect and manages leads and form data from websites.
 ## Day 9
 - Save form entry to the database
 - Customize table display for form data
+
+## Day 10
+- Add unique check option
+- View, Edit & Delete form data
+- Add timestamps on form data
