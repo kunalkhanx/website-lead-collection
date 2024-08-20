@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\Cors;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,7 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => AdminMiddleware::class,
-            'super' => SuperAdminMiddleware::class
+            'super' => SuperAdminMiddleware::class,
+            'cors' => Cors::class
+        ]);
+        $middleware->validateCsrfTokens(except: [
+            '/api/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

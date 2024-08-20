@@ -6,7 +6,7 @@
     <div class="w-full max-w-sm mx-auto flex flex-col gap-6">
 
         <div class="flex items-center">
-            <a href="{{route('forms')}}" class="p-4">
+            <a href="{{route('forms')}}" class="p-4 pl-0">
                 <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
                 </svg>                  
@@ -31,7 +31,7 @@
                     <p class="err">{{$message}}</p>
                 @enderror
             </div>
-            <div class="flex items-start mb-5">
+            <div class="flex items-start">
                 @php
                     if($form->status === NULL){
                         $form->status = 1;
@@ -43,6 +43,13 @@
                 </div>
                 <label for="disabled" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Disabled</label>
             </div>
+            <div class="flex items-start">
+                <div class="flex items-center h-5">
+                    <input id="public" name="public" type="checkbox" value="1" {{old('public', ($form->public)) ? 'checked' : ''}}
+                        class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" />
+                </div>
+                <label for="public" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Public</label>
+            </div>
             <div>
                 <button type="submit"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{$form->id ? 'Update' : 'Create'}}</button>
@@ -50,7 +57,15 @@
         </form>
         @if($form->id)
         <hr>
-
+        @if($form->public)
+        <div class="">
+            <p class="text-lg font-medium mb-2">API Endpoints</p>
+            <p class="flex gap-3 text-xs"><span class="text-green-600">CREATE DATA </span>{{route('forms.api.create', ['form' => $form->id])}}</p>
+            <p class="flex gap-3 text-xs"><span class="text-amber-600">UPDATE DATA </span>{{route('forms.api.create', ['form' => $form->id])}}/{form_data_id}</p>
+        </div>
+        <hr>
+        @endif
+        
         <div class="flex flex-col gap-6">
             <h2 class="text-2xl">Fields</h2>
 

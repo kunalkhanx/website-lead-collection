@@ -33,6 +33,9 @@
                             Fields
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Entries
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Action
                         </th>
                     </tr>
@@ -55,8 +58,11 @@
                                 {{ $form->user->name }}
                             </td>
                             <td class="px-6 py-4">
-                                {{count($form->fields)}}
-                            </td>                           
+                                {{$form->fields_count}}
+                            </td>    
+                            <td class="px-6 py-4">
+                                {{$form->data_count}}
+                            </td>                         
                             <td class="px-6 py-4 flex items-center gap-3">
                                 <a href="{{route('forms.form_data', ['id' => $form->id])}}" class="font-medium text-green-600 dark:text-green-500 hover:underline">
                                     View

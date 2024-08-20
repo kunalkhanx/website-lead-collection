@@ -4,7 +4,16 @@
     <div class="container mx-auto max-w-screen-xl p-4">
 
         <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-3xl">{{$form->name}}</h2>
+            <div class="flex items-center">
+                <a href="{{route('forms')}}" class="p-4 pl-0">
+                    <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 12h14M5 12l4-4m-4 4 4 4" />
+                    </svg>
+                </a>
+                <h2 class="text-3xl">{{$form->name}}</h2>
+            </div>
 
             <a href="{{route('forms.create_data', ['id' => $form->id])}}"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add data</a>

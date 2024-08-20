@@ -5,7 +5,7 @@
 <div class="container mx-auto max-w-2xl p-4 flex flex-col gap-6">
 
     <div class="flex items-center">
-        <a href="{{route('forms.form_data', ['id' => $form->id])}}" class="p-4">
+        <a href="{{route('forms.form_data', ['id' => $form->id])}}" class="p-4 pl-0">
             <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

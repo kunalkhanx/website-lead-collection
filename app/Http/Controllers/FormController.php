@@ -9,12 +9,15 @@ use App\Models\FormField;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
 
     public function index(){
-        $forms = Form::where('status', '>=', 0)->with('user')->with('fields')->latest()->paginate(10);
+        $forms = Form::where('status', '>=', 0)->with(['user' => function($query){
+            $query->select(['id', 'name']);
+        }])->withCount('fields')->withCount('data')->latest()->paginate(10);
         return view('forms.index', ['forms' => $forms]);
     }
     public function create(){
@@ -57,13 +60,25 @@ class FormController extends Controller
     public function do_create(Request $request){
         $request->validate([
             'name' => 'required|min:3|max:160',
-            'description' => 'nullable|max:255'
+            'description' => 'nullable|max:255',
+            'public' => 'boolean',
+            'disabled' => 'boolean'
         ]);
         $user = Auth::user();
         $form = new Form;
         $form->user_id = $user->id;
         $form->name = $request->name;
         $form->description = $request->description;
+        if($request->disabled){
+            $form->status = 0;
+        }else{
+            $form->status = 1;
+        }
+        if($request->public){
+            $form->public = true;
+        }else{
+            $form->public = false;
+        }
         $result = $form->save();
         if(!$result){
             return redirect()->back()->withInput()->with('error', 'Unable to create the form!');
@@ -77,7 +92,9 @@ class FormController extends Controller
         }
         $request->validate([
             'name' => 'required|min:3|max:160',
-            'description' => 'nullable|max:255'
+            'description' => 'nullable|max:255',
+            'public' => 'boolean',
+            'disabled' => 'boolean'
         ]);
         $user = Auth::user();
         $form->user_id = $user->id;
@@ -87,6 +104,11 @@ class FormController extends Controller
             $form->status = 0;
         }else{
             $form->status = 1;
+        }
+        if($request->public){
+            $form->public = true;
+        }else{
+            $form->public = false;
         }
         $result = $form->save();
         if(!$result){
@@ -174,6 +196,52 @@ class FormController extends Controller
         return redirect()->back()->with('success', 'Data added successfully!');
     }
 
+    public function do_create_api_data(Request $request, Form $form){
+        if(!$form){
+            return response('', 404);
+        }
+        if(!$form->public){
+            return response('', 404);
+        }
+        $fields = $form->fields()->get();
+        $validation_rules = [];
+        $data = [];
+        foreach($fields as $field){
+            $validation_rules[$field->name] = ($field->pivot->is_required ? 'required|' : '') . $field->validation_rules;
+            if($field->pivot->is_unique && $request->{$field->name}){
+                $uniqueResult = FormData::where('form_id', $form->id)->where('data', 'LIKE', '%"email": "'. $request->{$field->name} .'"%')->first();
+                if($uniqueResult){
+                    return response()->json([
+                        'errors' => [
+                            $field->name => $field->label . ' is already exists.'
+                        ]
+                    ], 400);
+                }
+            }
+            $data[$field->name] = $request->get($field->name);
+        }
+        $validator = Validator::make($request->all(), $validation_rules);
+        if($validator->fails()){
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $formData = new FormData;
+        $formData->form_id = $form->id;
+        $formData->data = json_encode($data);
+        $result = $formData->save();
+        if(!$result){
+            return response()->json([
+                'message' => 'Unable to add data!'
+            ], 500);
+        }
+        return response()->json([
+            'message' => 'Data added successfully!',
+            'data' => $formData
+        ], 201);
+    }
+
     public function do_update_data(Request $request, FormData $formData){
         if(!$formData){
             return response('', 404);
@@ -204,6 +272,53 @@ class FormController extends Controller
             return redirect()->back()->with('error', 'Unable to updated data!');
         }
         return redirect()->back()->with('success', 'Data updated successfully!');
+    }
+
+    public function do_update_api_data(Request $request, Form $form, FormData $formData){
+        if(!$formData || !$form){
+            return response('', 404);
+        }
+        if(!$form->public){
+            return response('', 404);
+        }
+        $fields = $form->fields()->get();
+        $validation_rules = [];
+        $data = [];
+        foreach($fields as $field){
+            $validation_rules[$field->name] = ($field->pivot->is_required ? 'required|' : '') . $field->validation_rules;
+            if($field->pivot->is_unique && $request->{$field->name}){
+                $uniqueResult = FormData::where('form_id', $form->id)->where('data', 'LIKE', '%"email": "'. $request->{$field->name} .'"%')->where('id', '!=', $formData->id)->first();
+                if($uniqueResult){
+                    return response()->json([
+                        'errors' => [
+                            $field->name => $field->label . ' is already exists.'
+                        ]
+                    ], 400);
+                }
+            }
+
+            $data[$field->name] = $request->get($field->name);
+        }
+
+        $validator = Validator::make($request->all(), $validation_rules);
+        if($validator->fails()){
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $formData->data = json_encode($data);
+        $result = $formData->save();
+
+        if(!$result){
+            return response()->json([
+                'message' => 'Unable to update data!'
+            ], 500);
+        }
+        return response()->json([
+            'message' => 'Data updated successfully!',
+            'data' => $formData
+        ], 200);
     }
 
     public function do_delete_data(FormData $formData){

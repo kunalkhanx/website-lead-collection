@@ -56,3 +56,8 @@ A protal to collect and manages leads and form data from websites.
 - Add unique check option
 - View, Edit & Delete form data
 - Add timestamps on form data
+
+## Day 11
+- Fix some small bugs
+- Add some optimization
+- Create API Endpoint for forms

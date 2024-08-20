@@ -60,3 +60,7 @@ Route::post('/login', [\App\Http\Controllers\AuthController::class, 'do_login'])
 
 
 
+Route::middleware('cors')->group(function(){
+    Route::post('/api/forms/{form}', [\App\Http\Controllers\FormController::class, 'do_create_api_data'])->name('forms.api.create');
+    Route::patch('/api/forms/{form}/{formData}', [\App\Http\Controllers\FormController::class, 'do_update_api_data'])->name('forms.api.update');
+});
