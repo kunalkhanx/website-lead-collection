@@ -61,3 +61,7 @@ A protal to collect and manages leads and form data from websites.
 - Fix some small bugs
 - Add some optimization
 - Create API Endpoint for forms
+
+## Day 12
+- Create API Endpoint To Get Form Data
+- Verify API with Token

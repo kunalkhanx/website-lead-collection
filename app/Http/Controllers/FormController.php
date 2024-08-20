@@ -56,6 +56,15 @@ class FormController extends Controller
         }        
         return view('forms.data.show', ['form' => $form, 'formData' => $formData]);
     }
+    public function show_api_data(FormData $formData){
+        if(!$formData){
+            return response('', 404);
+        }
+        return response()->json([
+            'message' => 'Request success!',
+            'data' => json_decode($formData->data, true)
+        ], 200);
+    }
 
     public function do_create(Request $request){
         $request->validate([

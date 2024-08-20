@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\APIAuth;
 use App\Http\Middleware\Cors;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Application;
@@ -17,7 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminMiddleware::class,
             'super' => SuperAdminMiddleware::class,
-            'cors' => Cors::class
+            'cors' => Cors::class,
+            'APIAuth' => APIAuth::class
         ]);
         $middleware->validateCsrfTokens(except: [
             '/api/*',
