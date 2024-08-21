@@ -65,3 +65,8 @@ A protal to collect and manages leads and form data from websites.
 ## Day 12
 - Create API Endpoint To Get Form Data
 - Verify API with Token
+
+## Day 13
+- Create Dashboard UI
+- Show data in dashboard
+- Project Complete
